@@ -12,8 +12,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 for filename in ["credit_scoring_model.pkl", "log_reg_explain.pkl"]:
     path = os.path.join(BASE_DIR, filename)
     if os.path.exists(path):
-        os.remove(path)
-        st.write(f"🗑️ Удалён старый файл: {filename}")
+        os.remove(path) 
 
 MODEL_FILES = {
     "credit_scoring_model.pkl": "1Vv0mbisLkITeQ5k39cV0VQ3pz7gCsCfg",
@@ -21,11 +20,9 @@ MODEL_FILES = {
 }
 
 for filename, file_id in MODEL_FILES.items():
-    model_path = os.path.join(BASE_DIR, filename)
-    st.write(f"📥 Скачиваем {filename}...")
+    model_path = os.path.join(BASE_DIR, filename) 
     url = f"https://drive.google.com/uc?id={file_id}"
-    gdown.download(url, model_path, quiet=False)
-    st.write(f"✅ {filename} загружен")
+    gdown.download(url, model_path, quiet=False) 
  
 import joblib
 model = joblib.load(os.path.join(BASE_DIR, "credit_scoring_model.pkl"))
