@@ -1,47 +1,22 @@
-import requests
 import os
-import pickle
- 
-def download_file_from_google_drive(file_id, destination):
-    URL = "https://docs.google.com/uc?export=download"
-    session = requests.Session()
-    response = session.get(URL, params={'id': file_id}, stream=True)
-    token = get_confirm_token(response)
-    if token:
-        params = {'id': file_id, 'confirm': token}
-        response = session.get(URL, params=params, stream=True)
-    save_response_content(response, destination)
+import gdown
 
-def get_confirm_token(response):
-    for key, value in response.cookies.items():
-        if key.startswith('download_warning'):
-            return value
-    return None
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-def save_response_content(response, destination):
-    CHUNK_SIZE = 32768
-    with open(destination, "wb") as f:
-        for chunk in response.iter_content(CHUNK_SIZE):
-            if chunk:
-                f.write(chunk)
- 
-MODEL_IDS = {
+MODEL_FILES = {
     "credit_scoring_model.pkl": "1Vv0mbisLkITeQ5k39cV0VQ3pz7gCsCfg",
     "log_reg_explain.pkl": "1IB2dWaEUVfp3HO8diqdsyFT6qF-cVW4x"
 }
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-for model_name, file_id in MODEL_IDS.items():
-    model_path = os.path.join(BASE_DIR, model_name)
+for filename, file_id in MODEL_FILES.items():
+    model_path = os.path.join(BASE_DIR, filename)
     if not os.path.exists(model_path):
-        print(f"📥 Скачиваем {model_name} из Google Drive...")
-        download_file_from_google_drive(file_id, model_path)
-        print(f"✅ {model_name} загружен")
+        print(f"📥 Скачиваем {filename} из Google Drive...")
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, model_path, quiet=False)
+        print(f"✅ {filename} успешно загружен")
     else:
-        print(f"✅ {model_name} уже существует — пропускаем загрузку")
-        
-
+        print(f"✅ {filename} уже существует")
 import streamlit as st
 import pandas as pd
 import joblib
