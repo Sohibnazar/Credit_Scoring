@@ -3,17 +3,58 @@ import pandas as pd
 import joblib
 import os
 import matplotlib.pyplot as plt
- 
+import requests
+import os
+import pickle
+
+# === Функции для скачивания с Google Drive ===
+def download_file_from_google_drive(file_id, destination):
+    URL = "https://docs.google.com/uc?export=download"
+    session = requests.Session()
+    response = session.get(URL, params={'id': file_id}, stream=True)
+    token = get_confirm_token(response)
+    if token:
+        params = {'id': file_id, 'confirm': token}
+        response = session.get(URL, params=params, stream=True)
+    save_response_content(response, destination)
+
+def get_confirm_token(response):
+    for key, value in response.cookies.items():
+        if key.startswith('download_warning'):
+            return value
+    return None
+
+def save_response_content(response, destination):
+    CHUNK_SIZE = 32768
+    with open(destination, "wb") as f:
+        for chunk in response.iter_content(CHUNK_SIZE):
+            if chunk:
+                f.write(chunk)
+
+# === Настройки моделей ===
+MODEL_IDS = {
+    "credit_scoring_model.pkl": "1Vv0mbisLkITeQ5k39cV0VQ3pz7gCsCfg",
+    "log_reg_explain.pkl": "1IB2dWaEUVfp3HO8diqdsyFT6qF-cVW4x"
+}
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+for model_name, file_id in MODEL_IDS.items():
+    model_path = os.path.join(BASE_DIR, model_name)
+    if not os.path.exists(model_path):
+        print(f"📥 Скачиваем {model_name} из Google Drive...")
+        download_file_from_google_drive(file_id, model_path)
+        print(f"✅ {model_name} загружен")
+    else:
+        print(f"✅ {model_name} уже существует — пропускаем загрузку")
+     
 st.set_page_config(
     page_title="PD Credit Scoring",
     page_icon="💳",
     layout="wide"
 )
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-model = joblib.load(os.path.join(BASE_DIR, "credit_scoring_model.pkl"))
-log_reg = joblib.load(os.path.join(BASE_DIR, "log_reg_explain.pkl"))
+ 
  
 num_cols = [
     "person_age",
