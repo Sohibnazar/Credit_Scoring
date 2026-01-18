@@ -19,8 +19,6 @@ gdown.download(url1, os.path.join(BASE_DIR, "credit_scoring_model.pkl"), fuzzy=T
  
 gdown.download(url2, os.path.join(BASE_DIR, "log_reg_explain.pkl"), fuzzy=True)
  
- 
-import joblib
 model = joblib.load(os.path.join(BASE_DIR, "credit_scoring_model.pkl"))
 log_reg = joblib.load(os.path.join(BASE_DIR, "log_reg_explain.pkl"))
 
