@@ -2,8 +2,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 import os
-import matplotlib.pyplot as plt   
-import os
+import matplotlib.pyplot as plt    
 import gdown
 import streamlit as st
 
@@ -13,16 +12,13 @@ for filename in ["credit_scoring_model.pkl", "log_reg_explain.pkl"]:
     path = os.path.join(BASE_DIR, filename)
     if os.path.exists(path):
         os.remove(path) 
-
-MODEL_FILES = {
-    "credit_scoring_model.pkl": "1Vv0mbisLkITeQ5k39cV0VQ3pz7gCsCfg",
-    "log_reg_explain.pkl": "1IB2dWaEUVfp3HO8diqdsyFT6qF-cVW4x"
-}
-
-for filename, file_id in MODEL_FILES.items():
-    model_path = os.path.join(BASE_DIR, filename) 
-    url = f"https://drive.google.com/uc?id={file_id}"
-    gdown.download(url, model_path, quiet=False) 
+url1 = "https://drive.google.com/file/d/1Vv0mbisLkITeQ5k39cV0VQ3pz7gCsCfg/view?usp=sharing"
+url2 = "https://drive.google.com/file/d/1IB2dWaEUVfp3HO8diqdsyFT6qF-cVW4x/view?usp=sharing"
+ 
+gdown.download(url1, os.path.join(BASE_DIR, "credit_scoring_model.pkl"), fuzzy=True)
+ 
+gdown.download(url2, os.path.join(BASE_DIR, "log_reg_explain.pkl"), fuzzy=True)
+ 
  
 import joblib
 model = joblib.load(os.path.join(BASE_DIR, "credit_scoring_model.pkl"))
@@ -32,10 +28,7 @@ st.set_page_config(
     page_title="PD Credit Scoring",
     page_icon="💳",
     layout="wide"
-)
-
-model = joblib.load(os.path.join(BASE_DIR, "credit_scoring_model.pkl"))
-log_reg = joblib.load(os.path.join(BASE_DIR, "log_reg_explain.pkl"))
+) 
  
 num_cols = [
     "person_age",
