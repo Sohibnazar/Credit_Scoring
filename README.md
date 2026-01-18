@@ -34,9 +34,7 @@
 - `person_emp_length` — стаж работы (лет)  
 - `loan_amnt` — сумма кредита  
 - `loan_int_rate` — процентная ставка  
-- `loan_intent` — цель кредита  
-- `loan_grade` — кредитный рейтинг  
-- `loan_percent_income` — доля кредита от дохода  
+- `loan_intent` — цель кредита   
 - `cb_person_default_on_file` — наличие дефолтов в прошлом  
 - `cb_person_cred_hist_length` — длина кредитной истории  
 
