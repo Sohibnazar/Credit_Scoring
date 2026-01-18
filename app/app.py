@@ -12,7 +12,7 @@ for filename, file_id in MODEL_FILES.items():
     model_path = os.path.join(BASE_DIR, filename)
     if not os.path.exists(model_path):
         print(f"📥 Скачиваем {filename} из Google Drive...")
-        url = f"https://drive.google.com/uc?id={file_id}"
+        url = f"https://drive.google.com/uc?id={file_id}"  # ← БЕЗ ПРОБЕЛОВ!
         gdown.download(url, model_path, quiet=False)
         print(f"✅ {filename} успешно загружен")
     else:
