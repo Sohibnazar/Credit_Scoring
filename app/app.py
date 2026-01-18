@@ -1,7 +1,19 @@
+import streamlit as st
+import pandas as pd
+import joblib
+import os
+import matplotlib.pyplot as plt   
 import os
 import gdown
+import streamlit as st
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ 
+for filename in ["credit_scoring_model.pkl", "log_reg_explain.pkl"]:
+    path = os.path.join(BASE_DIR, filename)
+    if os.path.exists(path):
+        os.remove(path)
+        st.write(f"🗑️ Удалён старый файл: {filename}")
 
 MODEL_FILES = {
     "credit_scoring_model.pkl": "1Vv0mbisLkITeQ5k39cV0VQ3pz7gCsCfg",
@@ -10,18 +22,15 @@ MODEL_FILES = {
 
 for filename, file_id in MODEL_FILES.items():
     model_path = os.path.join(BASE_DIR, filename)
-    if not os.path.exists(model_path):
-        print(f"📥 Скачиваем {filename} из Google Drive...")
-        url = f"https://drive.google.com/uc?id={file_id}"  # ← БЕЗ ПРОБЕЛОВ!
-        gdown.download(url, model_path, quiet=False)
-        print(f"✅ {filename} успешно загружен")
-    else:
-        print(f"✅ {filename} уже существует")
-import streamlit as st
-import pandas as pd
+    st.write(f"📥 Скачиваем {filename}...")
+    url = f"https://drive.google.com/uc?id={file_id}"
+    gdown.download(url, model_path, quiet=False)
+    st.write(f"✅ {filename} загружен")
+ 
 import joblib
-import os
-import matplotlib.pyplot as plt     
+model = joblib.load(os.path.join(BASE_DIR, "credit_scoring_model.pkl"))
+log_reg = joblib.load(os.path.join(BASE_DIR, "log_reg_explain.pkl"))
+
 st.set_page_config(
     page_title="PD Credit Scoring",
     page_icon="💳",
