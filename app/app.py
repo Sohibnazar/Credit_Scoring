@@ -1,13 +1,7 @@
-import streamlit as st
-import pandas as pd
-import joblib
-import os
-import matplotlib.pyplot as plt
 import requests
 import os
 import pickle
-
-# === Функции для скачивания с Google Drive ===
+ 
 def download_file_from_google_drive(file_id, destination):
     URL = "https://docs.google.com/uc?export=download"
     session = requests.Session()
@@ -30,8 +24,7 @@ def save_response_content(response, destination):
         for chunk in response.iter_content(CHUNK_SIZE):
             if chunk:
                 f.write(chunk)
-
-# === Настройки моделей ===
+ 
 MODEL_IDS = {
     "credit_scoring_model.pkl": "1Vv0mbisLkITeQ5k39cV0VQ3pz7gCsCfg",
     "log_reg_explain.pkl": "1IB2dWaEUVfp3HO8diqdsyFT6qF-cVW4x"
@@ -47,14 +40,21 @@ for model_name, file_id in MODEL_IDS.items():
         print(f"✅ {model_name} загружен")
     else:
         print(f"✅ {model_name} уже существует — пропускаем загрузку")
-     
+        
+
+import streamlit as st
+import pandas as pd
+import joblib
+import os
+import matplotlib.pyplot as plt     
 st.set_page_config(
     page_title="PD Credit Scoring",
     page_icon="💳",
     layout="wide"
 )
 
- 
+model = joblib.load(os.path.join(BASE_DIR, "credit_scoring_model.pkl"))
+log_reg = joblib.load(os.path.join(BASE_DIR, "log_reg_explain.pkl"))
  
 num_cols = [
     "person_age",
