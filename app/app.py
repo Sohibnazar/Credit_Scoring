@@ -253,14 +253,42 @@ with tab2:
         data_path = os.path.join(BASE_DIR, "..", "data", "credit_dataset.csv")
         return pd.read_csv(data_path, sep=";")
 
-
-    df = load_data()
-
+    df = load_data() 
     st.subheader("📄 Обучающие данные")
     st.dataframe(df.head(20), use_container_width=True)
-
+ 
     st.subheader("🎯 Распределение дефолтов")
     st.bar_chart(df["loan_status"].value_counts(normalize=True))
+ 
+    st.subheader("📊 Распределения числовых признаков")
+
+    num_cols = (
+        df.select_dtypes(exclude="object")
+          .columns
+          .drop("loan_status")
+    )
+
+    fig_hist, ax = plt.subplots(figsize=(14, 10))
+    df[num_cols].hist(bins=30, ax=ax)
+    plt.tight_layout()
+    st.pyplot(fig_hist)
+    plt.close(fig_hist)
+ 
+    st.subheader("🔗 Корреляционная матрица")
+
+    corr = df[num_cols.tolist() + ["loan_status"]].corr()
+
+    fig_corr, ax = plt.subplots(figsize=(12, 8))
+    sns.heatmap(
+        corr,
+        cmap="coolwarm",
+        annot=False,
+        ax=ax
+    )
+    plt.title("Correlation Matrix")
+    st.pyplot(fig_corr)
+    plt.close(fig_corr)
+
  
 with tab3:
     coef = log_reg.named_steps["model"].coef_[0]
