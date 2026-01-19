@@ -5,7 +5,7 @@ import os
 import matplotlib.pyplot as plt    
 import gdown
 import streamlit as st
-
+import seaborn as sns
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
  
 for filename in ["credit_scoring_model.pkl", "log_reg_explain.pkl"]:
